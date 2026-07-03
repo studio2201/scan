@@ -5,6 +5,7 @@ use crate::components::scan_board::ScanBoard;
 use crate::components::scan_leaderboard::ScanLeaderboard;
 use crate::components::scan_logic::{BoardState, GameStatus, Sector};
 use crate::components::scan_overlay::ScanOverlay;
+use crate::i18n::LocaleContext;
 use gloo_timers::callback::Interval;
 use yew::prelude::*;
 
@@ -21,6 +22,7 @@ pub fn scan_game(props: &Props) -> Html {
     let elapsed = use_state(|| 0u32);
     let interval_handle = use_mut_ref(|| None::<Interval>);
     let reload_trigger = use_state(|| 0usize);
+    let locale = use_context::<LocaleContext>().expect("locale context");
 
     // Stop timer on component drop
     {
@@ -66,7 +68,10 @@ pub fn scan_game(props: &Props) -> Html {
             elapsed.set(0);
             board.set(BoardState::new(s));
             sector.set(s);
-            on_status.emit(None);
+            on_status.emit(Some((
+                format!("Visor initialized. Ready to scan {} sector.", s.name()),
+                "success".to_string(),
+            )));
         })
     };
 
@@ -83,7 +88,17 @@ pub fn scan_game(props: &Props) -> Html {
 
             if old_status == GameStatus::NotStarted && new_board.status == GameStatus::Playing {
                 start_timer();
+                on_status.emit(Some((
+                    "Scanning sector... Detonation hazards present.".to_string(),
+                    "success".to_string(),
+                )));
+            } else if new_board.status == GameStatus::Playing {
+                on_status.emit(Some((
+                    format!("Grid sector ({}, {}) scanned: Clear.", c + 1, r + 1),
+                    "success".to_string(),
+                )));
             }
+
             if new_board.status == GameStatus::Won || new_board.status == GameStatus::Lost {
                 stop_timer();
                 if new_board.status == GameStatus::Won {
@@ -104,9 +119,25 @@ pub fn scan_game(props: &Props) -> Html {
 
     let on_flag = {
         let board = board.clone();
+        let on_status = props.on_status.clone();
         Callback::from(move |(r, c): (usize, usize)| {
             let mut new_board = (*board).clone();
+            let was_flagged = new_board.grid[r][c].is_flagged;
             new_board.toggle_flag(r, c);
+            let is_flagged = new_board.grid[r][c].is_flagged;
+            if was_flagged != is_flagged {
+                if is_flagged {
+                    on_status.emit(Some((
+                        format!("Beacon deployed at ({}, {}).", c + 1, r + 1),
+                        "success".to_string(),
+                    )));
+                } else {
+                    on_status.emit(Some((
+                        format!("Beacon retrieved from ({}, {}).", c + 1, r + 1),
+                        "success".to_string(),
+                    )));
+                }
+            }
             board.set(new_board);
         })
     };
@@ -181,15 +212,15 @@ pub fn scan_game(props: &Props) -> Html {
             <div class="game-main-panel">
                 <div class="hud-bar glassmorphic">
                     <div class="hud-metric">
-                        <span class="hud-label">{"SECTOR:"}</span>
+                        <span class="hud-label">{ format!("{}:", locale.t("sector").to_uppercase()) }</span>
                         <span class="hud-value font-neon">{ sector.name().to_uppercase() }</span>
                     </div>
                     <div class="hud-metric">
-                        <span class="hud-label">{"BEACONS:"}</span>
+                        <span class="hud-label">{ "BEACONS:" }</span>
                         <span class="hud-value font-neon">{ remaining_beacons }</span>
                     </div>
                     <div class="hud-metric">
-                        <span class="hud-label">{"TIMER:"}</span>
+                        <span class="hud-label">{ format!("{}:", locale.t("score").to_uppercase()) }</span>
                         <span class="hud-value font-neon">{ format!("{:.1}s", *elapsed as f64 / 10.0) }</span>
                     </div>
                 </div>
@@ -204,7 +235,7 @@ pub fn scan_game(props: &Props) -> Html {
                         <button onclick={toggle_flag_mode} class={if *flag_mode { "active" } else { "" }}>
                             { if *flag_mode { "⚑ BEACON" } else { "⛏ REVEAL" } }
                         </button>
-                        <button onclick={restart_click} class="btn-reset">{"RESTART"}</button>
+                        <button onclick={restart_click} class="btn-reset">{ locale.t("play_again") }</button>
                     </div>
                 </div>
 

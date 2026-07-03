@@ -18,7 +18,7 @@ pub fn scan_board(props: &Props) -> Html {
 
     // Construct inline grid layout variables
     let grid_style = format!(
-        "display: grid; grid-template-rows: repeat({}, 1fr); grid-template-columns: repeat({}, 1fr); gap: 4px; width: 100%; max-width: 900px; margin: 0 auto; aspect-ratio: {} / {};",
+        "display: grid; grid-template-rows: repeat({}, 1fr); grid-template-columns: repeat({}, 1fr); gap: 4px; width: 100%; max-width: 600px; margin: 0 auto; aspect-ratio: {} / {};",
         board.rows, board.cols, board.cols, board.rows
     );
 

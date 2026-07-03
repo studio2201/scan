@@ -443,3 +443,10 @@ main {
     opacity: 0.4;
     cursor: not-allowed;
 }
+
+/* Hide the touch reveal/beacon mode toggle button on devices with a mouse */
+@media (pointer: fine) {
+    .mode-toggles button:first-child {
+        display: none;
+    }
+}

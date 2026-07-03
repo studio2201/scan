@@ -14,7 +14,6 @@
 //! - [`scan_game`] — top-level game component that composes the scan
 //!   sub-modules and renders the score / overlay layout.
 
-pub mod event_listener;
 pub mod footer;
 pub mod header;
 pub mod pin;

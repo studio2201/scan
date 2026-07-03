@@ -2,6 +2,7 @@
 
 use crate::api::ApiService;
 use crate::components::scan_logic::Sector;
+use crate::i18n::LocaleContext;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -15,6 +16,7 @@ pub fn scan_leaderboard(props: &Props) -> Html {
     let sector = props.sector;
     let reload_trigger = props.reload_trigger;
     let entries = use_state(Vec::new);
+    let locale = use_context::<LocaleContext>().expect("locale context");
 
     {
         let entries = entries.clone();
@@ -32,21 +34,21 @@ pub fn scan_leaderboard(props: &Props) -> Html {
 
     html! {
         <div class="leaderboard-panel glassmorphic">
-            <h3>{ format!("{} Sector Records", sector.name()) }</h3>
+            <h3>{ format!("{} {}", sector.name(), locale.t("leaderboard")) }</h3>
             <div class="leaderboard-table-container">
                 <table class="leaderboard-table">
                     <thead>
                         <tr>
-                            <th>{ "Rank" }</th>
-                            <th>{ "Operator" }</th>
-                            <th>{ "Time" }</th>
+                            <th>{ "RANK" }</th>
+                            <th>{ "OPERATOR" }</th>
+                            <th>{ locale.t("score") }</th>
                         </tr>
                     </thead>
                     <tbody>
                         { if entries.is_empty() {
                             html! {
                                 <tr>
-                                    <td colspan="3" class="no-records">{ "No scan logs recorded." }</td>
+                                    <td colspan="3" class="no-records">{ locale.t("no_scores") }</td>
                                 </tr>
                             }
                         } else {

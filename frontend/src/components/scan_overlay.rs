@@ -1,6 +1,7 @@
 //! Game status overlays (victory / defeat) for Scan.
 
 use crate::components::scan_logic::GameStatus;
+use crate::i18n::LocaleContext;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
@@ -15,6 +16,7 @@ pub struct Props {
 pub fn scan_overlay(props: &Props) -> Html {
     let name_ref = use_node_ref();
     let name_val = use_state(String::new);
+    let locale = use_context::<LocaleContext>().expect("locale context");
 
     let on_input = {
         let name_val = name_val.clone();
@@ -53,13 +55,13 @@ pub fn scan_overlay(props: &Props) -> Html {
         GameStatus::Won => {
             html! {
                 <div class="game-overlay victory glassmorphic">
-                    <h2 class="outcome-title secured">{"SECTOR SECURED"}</h2>
+                    <h2 class="outcome-title secured">{ "SECTOR SECURED" }</h2>
                     <p class="stat-line">
-                        {"Clear Time: "}
+                        { format!("{}: ", locale.t("final_score")) }
                         <span class="highlight">{ format!("{:.1}s", props.elapsed_tenths as f64 / 10.0) }</span>
                     </p>
                     <div class="score-submission-form">
-                        <label for="initials-input">{"ENTER OPERATOR CODE (3 LETTERS):"}</label>
+                        <label for="initials-input">{ locale.t("enter_name") }</label>
                         <div class="input-row">
                             <input
                                 id="initials-input"
@@ -76,7 +78,7 @@ pub fn scan_overlay(props: &Props) -> Html {
                                 onclick={on_submit_click}
                                 disabled={name_val.len() != 3}
                             >
-                                {"SUBMIT SCAN"}
+                                { locale.t("submit_score") }
                             </button>
                         </div>
                     </div>
@@ -86,10 +88,10 @@ pub fn scan_overlay(props: &Props) -> Html {
         GameStatus::Lost => {
             html! {
                 <div class="game-overlay defeat glassmorphic">
-                    <h2 class="outcome-title compromised">{"DANGER: DETONATION"}</h2>
+                    <h2 class="outcome-title compromised">{ locale.t("game_over") }</h2>
                     <p class="stat-line">{"Sector scanning aborted due to thermal hazard."}</p>
                     <button class="btn-restart" onclick={restart_click}>
-                        {"REINITIALIZE VISOR"}
+                        { locale.t("play_again") }
                     </button>
                 </div>
             }
