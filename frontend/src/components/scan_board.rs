@@ -17,10 +17,7 @@ pub fn scan_board(props: &Props) -> Html {
     let flag_mode = props.flag_mode;
 
     // Construct inline grid layout variables
-    let grid_style = format!(
-        "--rows: {}; --cols: {};",
-        board.rows, board.cols
-    );
+    let grid_style = format!("--rows: {}; --cols: {};", board.rows, board.cols);
 
     html! {
         <div class="scan-board-wrapper">

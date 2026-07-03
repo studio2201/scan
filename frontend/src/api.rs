@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 //! HTTP API client for the Snake frontend.
 //!
 //! Wraps [`gloo_net::http::Request`] calls to the backend endpoints actually

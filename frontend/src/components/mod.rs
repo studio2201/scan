@@ -19,6 +19,5 @@ pub mod header;
 pub mod pin;
 pub mod scan_board;
 pub mod scan_game;
-pub mod scan_leaderboard;
 pub mod scan_logic;
 pub mod scan_overlay;

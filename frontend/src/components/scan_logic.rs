@@ -1,5 +1,6 @@
 //! Scan game logic and grid state management.
 
+#[allow(dead_code)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash, Debug, serde::Serialize, serde::Deserialize)]
 pub enum Sector {
     Alpha,
@@ -7,6 +8,7 @@ pub enum Sector {
     Gamma,
 }
 
+#[allow(dead_code)]
 impl Sector {
     pub fn config(self) -> (usize, usize, usize) {
         match self {
