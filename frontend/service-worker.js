@@ -1,7 +1,7 @@
 let APP_VERSION = "1.0.0";
 
-const CACHE_PREFIX = "SNAKE_CACHE_";
-const PWA_PREFIX = "SNAKE_PWA_CACHE_";
+const CACHE_PREFIX = "SCAN_CACHE_";
+const PWA_PREFIX = "SCAN_PWA_CACHE_";
 
 const SHELL_FILES = [
   "/",
@@ -36,7 +36,7 @@ const fetchConfig = async () => {
     if (!res.ok) return null;
     return await safeJson(res);
   } catch (err) {
-    console.error("Snake SW /api/config fetch failed:", err);
+    console.error("Scan SW /api/config fetch failed:", err);
     return null;
   }
 };
@@ -46,7 +46,7 @@ const getAppVersion = async () => {
   if (cfg && typeof cfg.version === "string" && cfg.version.length > 0) {
     APP_VERSION = cfg.version;
   }
-  console.log(`Snake SW app version: ${APP_VERSION}`);
+  console.log(`Scan SW app version: ${APP_VERSION}`);
   return APP_VERSION;
 };
 
@@ -68,7 +68,7 @@ const dedupe = (list) => Array.from(new Set(list));
 
 const installNewCache = async (version) => {
   const cacheName = `${CACHE_PREFIX}${version}`;
-  console.log(`Snake SW installing cache ${cacheName}`);
+  console.log(`Scan SW installing cache ${cacheName}`);
   const manifestRes = await fetch("/asset-manifest.json", { cache: "no-store" });
   if (!manifestRes.ok) {
     throw new Error(`asset-manifest.json returned ${manifestRes.status}`);
@@ -77,7 +77,7 @@ const installNewCache = async (version) => {
   const assetsToCache = dedupe([...SHELL_FILES, ...assets]);
   const cache = await caches.open(cacheName);
   await cache.addAll(assetsToCache);
-  console.log(`Snake cache pre-populated for v${version}`);
+  console.log(`Scan cache pre-populated for v${version}`);
 };
 
 const cleanupOldCaches = async (currentVersion) => {
@@ -86,7 +86,7 @@ const cleanupOldCaches = async (currentVersion) => {
   const deletes = names
     .filter((name) => isManagedCache(name) && name !== currentName)
     .map((name) => {
-      console.log(`Snake cache deleted (old): ${name}`);
+      console.log(`Scan cache deleted (old): ${name}`);
       return caches.delete(name);
     });
   return Promise.all(deletes);
@@ -95,7 +95,7 @@ const cleanupOldCaches = async (currentVersion) => {
 const checkAndUpdateCache = async () => {
   const appVersion = await getAppVersion();
   const cacheVersion = await getCurrentCacheVersion();
-  console.log(`Snake SW check: app=${appVersion} cache=${cacheVersion ?? "none"}`);
+  console.log(`Scan SW check: app=${appVersion} cache=${cacheVersion ?? "none"}`);
   if (!cacheVersion) {
     await installNewCache(appVersion);
     return { updated: true, firstInstall: true };
@@ -109,14 +109,14 @@ const checkAndUpdateCache = async () => {
 };
 
 self.addEventListener("install", (event) => {
-  console.log(`Snake SW installing v${APP_VERSION}`);
+  console.log(`Scan SW installing v${APP_VERSION}`);
   event.waitUntil(
     (async () => {
       try {
         await getAppVersion();
         await installNewCache(APP_VERSION);
       } catch (err) {
-        console.error("Snake SW install failed:", err);
+        console.error("Scan SW install failed:", err);
         throw err;
       }
     })().then(() => self.skipWaiting())
@@ -124,7 +124,7 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("activate", (event) => {
-  console.log(`Snake SW activating v${APP_VERSION}`);
+  console.log(`Scan SW activating v${APP_VERSION}`);
   event.waitUntil(
     (async () => {
       const { updated, firstInstall } = await checkAndUpdateCache();
