@@ -144,6 +144,20 @@ main {
     background: rgba(239, 68, 68, 0.1) !important;
 }
 
+.btn-reset-guide {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    color: rgba(255, 255, 255, 0.25) !important;
+    cursor: default !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+.btn-reset-guide:hover {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
 /* Board frame */
 .board-frame {
     position: relative;

@@ -3,7 +3,6 @@
 use crate::components::scan_board::ScanBoard;
 use crate::components::scan_logic::{BoardState, GameStatus, Sector};
 use crate::components::scan_overlay::ScanOverlay;
-use crate::i18n::LocaleContext;
 use gloo_timers::callback::Interval;
 use yew::prelude::*;
 
@@ -18,7 +17,6 @@ pub fn scan_game(props: &Props) -> Html {
     let flag_mode = use_state(|| false);
     let elapsed = use_state(|| 0u32);
     let interval_handle = use_mut_ref(|| None::<Interval>);
-    let locale = use_context::<LocaleContext>().expect("locale context");
 
     // Stop timer on component drop
     {
@@ -175,7 +173,17 @@ pub fn scan_game(props: &Props) -> Html {
                     <button onclick={toggle_flag_mode} class={if *flag_mode { "active" } else { "" }}>
                         { if *flag_mode { "⚑ BEACON" } else { "⛏ REVEAL" } }
                     </button>
-                    <button onclick={restart_click} class="btn-reset">{ locale.t("play_again") }</button>
+                    { if board.status == GameStatus::Playing {
+                        html! {
+                            <button onclick={restart_click} class="btn-reset">{"RESTART"}</button>
+                        }
+                    } else if board.status == GameStatus::NotStarted {
+                        html! {
+                            <button class="btn-reset-guide" disabled=true>{"CLICK GRID TO START"}</button>
+                        }
+                    } else {
+                        html! {}
+                    } }
                 </div>
                 <div class="stats-counter">
                     <div class="beacons-counter">
