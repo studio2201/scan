@@ -1,12 +1,12 @@
 //! Main Scan gameplay container component.
 
-use yew::prelude::*;
-use crate::components::scan_logic::{BoardState, Sector, GameStatus};
-use crate::components::scan_board::ScanBoard;
-use crate::components::scan_overlay::ScanOverlay;
-use crate::components::scan_leaderboard::ScanLeaderboard;
 use crate::api::ApiService;
+use crate::components::scan_board::ScanBoard;
+use crate::components::scan_leaderboard::ScanLeaderboard;
+use crate::components::scan_logic::{BoardState, GameStatus, Sector};
+use crate::components::scan_overlay::ScanOverlay;
 use gloo_timers::callback::Interval;
+use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct Props {
@@ -78,18 +78,24 @@ pub fn scan_game(props: &Props) -> Html {
         Callback::from(move |(r, c): (usize, usize)| {
             let mut new_board = (*board).clone();
             let old_status = new_board.status;
-            
+
             new_board.reveal_cell(r, c);
-            
+
             if old_status == GameStatus::NotStarted && new_board.status == GameStatus::Playing {
                 start_timer();
             }
             if new_board.status == GameStatus::Won || new_board.status == GameStatus::Lost {
                 stop_timer();
                 if new_board.status == GameStatus::Won {
-                    on_status.emit(Some(("Sector secured successfully.".to_string(), "success".to_string())));
+                    on_status.emit(Some((
+                        "Sector secured successfully.".to_string(),
+                        "success".to_string(),
+                    )));
                 } else {
-                    on_status.emit(Some(("Danger! Detonation hazard encountered.".to_string(), "error".to_string())));
+                    on_status.emit(Some((
+                        "Danger! Detonation hazard encountered.".to_string(),
+                        "error".to_string(),
+                    )));
                 }
             }
             board.set(new_board);
@@ -112,21 +118,30 @@ pub fn scan_game(props: &Props) -> Html {
         let on_status = props.on_status.clone();
         let sector_val = *sector;
         let reset_game = reset_game.clone();
-        
+
         Callback::from(move |name: String| {
             let elapsed_val = *elapsed;
             let category = sector_val.name().to_string();
             let reload_trigger = reload_trigger.clone();
             let on_status = on_status.clone();
             let reset_game = reset_game.clone();
-            
+
             wasm_bindgen_futures::spawn_local(async move {
-                if ApiService::submit_score(&name, elapsed_val, &category).await.is_ok() {
+                if ApiService::submit_score(&name, elapsed_val, &category)
+                    .await
+                    .is_ok()
+                {
                     reload_trigger.set(*reload_trigger + 1);
-                    on_status.emit(Some(("Scan record catalogued.".to_string(), "success".to_string())));
+                    on_status.emit(Some((
+                        "Scan record catalogued.".to_string(),
+                        "success".to_string(),
+                    )));
                     reset_game.emit(sector_val);
                 } else {
-                    on_status.emit(Some(("Failed to upload score.".to_string(), "error".to_string())));
+                    on_status.emit(Some((
+                        "Failed to upload score.".to_string(),
+                        "error".to_string(),
+                    )));
                 }
             });
         })

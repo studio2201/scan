@@ -1,8 +1,8 @@
 //! Leaderboard display component for Scan.
 
-use yew::prelude::*;
-use crate::components::scan_logic::Sector;
 use crate::api::ApiService;
+use crate::components::scan_logic::Sector;
+use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct Props {

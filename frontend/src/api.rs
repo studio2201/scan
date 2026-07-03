@@ -182,7 +182,11 @@ impl ApiService {
     }
 
     /// Posts the player's final score and name.
-    pub async fn submit_score(name: &str, score: u32, category: &str) -> Result<(), gloo_net::Error> {
+    pub async fn submit_score(
+        name: &str,
+        score: u32,
+        category: &str,
+    ) -> Result<(), gloo_net::Error> {
         let payload = SubmitRequest {
             name: name.to_string(),
             score,

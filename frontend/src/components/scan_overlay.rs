@@ -1,7 +1,7 @@
 //! Game status overlays (victory / defeat) for Scan.
 
-use yew::prelude::*;
 use crate::components::scan_logic::GameStatus;
+use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct Props {
@@ -20,7 +20,8 @@ pub fn scan_overlay(props: &Props) -> Html {
         let name_val = name_val.clone();
         Callback::from(move |e: InputEvent| {
             if let Some(input) = e.target_dyn_into::<web_sys::HtmlInputElement>() {
-                let val: String = input.value()
+                let val: String = input
+                    .value()
                     .to_uppercase()
                     .chars()
                     .filter(|c| c.is_ascii_alphabetic())

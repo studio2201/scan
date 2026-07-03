@@ -11,7 +11,11 @@ use common::{build_test_app, get, send, with_connect_info};
 #[tokio::test]
 async fn leaderboard_get_returns_empty_when_no_file() {
     let (_tmp, _state, router) = build_test_app(None).await;
-    let (status, body, _) = send(&router, with_connect_info(get("/api/leaderboard?category=Alpha"))).await;
+    let (status, body, _) = send(
+        &router,
+        with_connect_info(get("/api/leaderboard?category=Alpha")),
+    )
+    .await;
     assert_eq!(status, StatusCode::OK);
     assert!(body.is_array());
     assert_eq!(body.as_array().unwrap().len(), 0);
@@ -39,7 +43,11 @@ async fn leaderboard_post_persists_and_get_returns_same() {
     assert_eq!(arr[0]["name"], "ALI");
     assert_eq!(arr[0]["score"], 100);
 
-    let (status, body, _) = send(&router, with_connect_info(get("/api/leaderboard?category=Alpha"))).await;
+    let (status, body, _) = send(
+        &router,
+        with_connect_info(get("/api/leaderboard?category=Alpha")),
+    )
+    .await;
     assert_eq!(status, StatusCode::OK);
     let arr = body.as_array().expect("array");
     assert_eq!(arr.len(), 1);
@@ -68,7 +76,11 @@ async fn leaderboard_post_sanitizes_player_name() {
 #[tokio::test]
 async fn leaderboard_get_returns_401_when_pin_set_no_cookie() {
     let (_tmp, _state, router) = build_test_app(Some("1234")).await;
-    let (status, body, _) = send(&router, with_connect_info(get("/api/leaderboard?category=Alpha"))).await;
+    let (status, body, _) = send(
+        &router,
+        with_connect_info(get("/api/leaderboard?category=Alpha")),
+    )
+    .await;
     assert_eq!(status, StatusCode::UNAUTHORIZED);
     assert_eq!(body["error"], "Unauthorized");
 }

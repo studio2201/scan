@@ -1,7 +1,7 @@
 //! Renders the Scan board grid.
 
-use yew::prelude::*;
 use crate::components::scan_logic::BoardState;
+use yew::prelude::*;
 
 #[derive(Properties, PartialEq, Clone)]
 pub struct Props {
@@ -15,7 +15,7 @@ pub struct Props {
 pub fn scan_board(props: &Props) -> Html {
     let board = &props.board;
     let flag_mode = props.flag_mode;
-    
+
     // Construct inline grid layout variables
     let grid_style = format!(
         "display: grid; grid-template-rows: repeat({}, 1fr); grid-template-columns: repeat({}, 1fr); gap: 4px; width: 100%; max-width: 900px; margin: 0 auto; aspect-ratio: {} / {};",
@@ -30,7 +30,7 @@ pub fn scan_board(props: &Props) -> Html {
                     let on_flag = props.on_flag.clone();
                     (0..board.cols).map(move |c| {
                         let cell = board.grid[r][c];
-                        
+
                         let on_click = {
                             let on_reveal = on_reveal.clone();
                             let on_flag = on_flag.clone();
@@ -43,7 +43,7 @@ pub fn scan_board(props: &Props) -> Html {
                                 }
                             })
                         };
-                        
+
                         let on_context_menu = {
                             let on_flag = on_flag.clone();
                             Callback::from(move |e: MouseEvent| {
@@ -51,10 +51,10 @@ pub fn scan_board(props: &Props) -> Html {
                                 on_flag.emit((r, c));
                             })
                         };
-                        
+
                         let mut cell_class = vec!["scan-cell".to_string()];
                         let mut cell_content = html! {};
-                        
+
                         if cell.is_revealed {
                             cell_class.push("revealed".to_string());
                             if cell.is_mine {

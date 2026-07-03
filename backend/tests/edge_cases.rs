@@ -203,7 +203,11 @@ async fn leaderboard_concurrent_submissions_do_not_lose_data() {
     }
 
     // Final GET should reflect all 10 unique entries.
-    let (status, body, _) = send(&router, with_connect_info(get("/api/leaderboard?category=Alpha"))).await;
+    let (status, body, _) = send(
+        &router,
+        with_connect_info(get("/api/leaderboard?category=Alpha")),
+    )
+    .await;
     assert_eq!(status, StatusCode::OK);
     let names: HashSet<String> = body
         .as_array()

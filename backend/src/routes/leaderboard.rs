@@ -1,13 +1,13 @@
 //! Scan leaderboard persistence and endpoints.
 
+use axum::Json;
 use axum::extract::{Query, State};
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
-use axum::Json;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use tokio::fs;
 
 use crate::error::AppError;
@@ -52,7 +52,10 @@ async fn read_leaderboard(path: &Path) -> LeaderboardData {
 #[must_use]
 pub fn sanitize_player_name(raw: &str) -> String {
     let trimmed = raw.trim().to_ascii_uppercase();
-    let chars: String = trimmed.chars().filter(|c| c.is_ascii_alphabetic()).collect();
+    let chars: String = trimmed
+        .chars()
+        .filter(|c| c.is_ascii_alphabetic())
+        .collect();
     if chars.is_empty() {
         return ANONYMOUS_NAME.to_string();
     }
@@ -64,8 +67,13 @@ pub fn sanitize_player_name(raw: &str) -> String {
 }
 
 async fn atomic_write(path: &Path, content: &[u8]) -> Result<(), AppError> {
-    let parent = path.parent().ok_or_else(|| AppError::internal("leaderboard path has no parent"))?;
-    let file_name = path.file_name().and_then(|n| n.to_str()).ok_or_else(|| AppError::internal("leaderboard filename invalid"))?;
+    let parent = path
+        .parent()
+        .ok_or_else(|| AppError::internal("leaderboard path has no parent"))?;
+    let file_name = path
+        .file_name()
+        .and_then(|n| n.to_str())
+        .ok_or_else(|| AppError::internal("leaderboard filename invalid"))?;
     let tmp = parent.join(format!(".{file_name}.tmp"));
     fs::create_dir_all(parent).await?;
     fs::write(&tmp, content).await?;
@@ -99,7 +107,7 @@ pub async fn submit_score(
     let path = state.leaderboard_file.clone();
     let name = sanitize_player_name(&req.name);
     let date = Utc::now().to_rfc3339();
-    
+
     let entry = LeaderboardEntry {
         name,
         score: req.score,
@@ -111,7 +119,7 @@ pub async fn submit_score(
     let mut data = read_leaderboard(&path).await;
     let list = data.entry(req.category.clone()).or_insert_with(Vec::new);
     list.push(entry);
-    
+
     // Sort ascending: lower score (time) is better!
     list.sort_by_key(|e| e.score);
     list.truncate(MAX_LEADERBOARD_ENTRIES);

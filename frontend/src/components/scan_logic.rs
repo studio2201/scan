@@ -15,7 +15,7 @@ impl Sector {
             Self::Gamma => (30, 16, 99),
         }
     }
-    
+
     pub fn name(self) -> &'static str {
         match self {
             Self::Alpha => "Alpha",
@@ -81,11 +81,11 @@ impl BoardState {
     /// Place mines safely (guaranteeing first click and its neighbors are clear)
     pub fn generate_mines(&mut self, start_r: usize, start_c: usize) {
         let mut mine_positions = Vec::new();
-        
+
         // Build all possible positions except start position and its neighbors
         for r in 0..self.rows {
             for c in 0..self.cols {
-                let is_near_start = (r as isize - start_r as isize).abs() <= 1 
+                let is_near_start = (r as isize - start_r as isize).abs() <= 1
                     && (c as isize - start_c as isize).abs() <= 1;
                 if !is_near_start {
                     mine_positions.push((r, c));
@@ -99,7 +99,7 @@ impl BoardState {
             let j = (js_sys::Math::random() * (i + 1) as f64).floor() as usize;
             mine_positions.swap(i, j);
         }
-        
+
         let mines_to_place = self.mines.min(mine_positions.len());
         for &(r, c) in &mine_positions[..mines_to_place] {
             self.grid[r][c].is_mine = true;
@@ -123,10 +123,13 @@ impl BoardState {
             for dc in -1..=1 {
                 let nr = r as isize + dr;
                 let nc = c as isize + dc;
-                if nr >= 0 && nr < self.rows as isize && nc >= 0 && nc < self.cols as isize {
-                    if self.grid[nr as usize][nc as usize].is_mine {
-                        count += 1;
-                    }
+                if nr >= 0
+                    && nr < self.rows as isize
+                    && nc >= 0
+                    && nc < self.cols as isize
+                    && self.grid[nr as usize][nc as usize].is_mine
+                {
+                    count += 1;
                 }
             }
         }
@@ -167,7 +170,11 @@ impl BoardState {
     }
 
     fn reveal_recursive(&mut self, r: usize, c: usize) {
-        if r >= self.rows || c >= self.cols || self.grid[r][c].is_revealed || self.grid[r][c].is_flagged {
+        if r >= self.rows
+            || c >= self.cols
+            || self.grid[r][c].is_revealed
+            || self.grid[r][c].is_flagged
+        {
             return;
         }
 
@@ -197,7 +204,8 @@ impl BoardState {
     }
 
     pub fn count_flagged(&self) -> usize {
-        self.grid.iter()
+        self.grid
+            .iter()
             .map(|row| row.iter().filter(|cell| cell.is_flagged).count())
             .sum()
     }
