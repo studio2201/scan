@@ -1,6 +1,6 @@
 # Scan docker-compose.
 #
-# This file ships a complete, runnable recipe for the `ubermetroid/scan`
+# This file ships a complete, runnable recipe for the `etecoons/scan`
 # image (UBI container from Docker Hub
 # host shell env or a `.env` file in the same directory.
 #
@@ -37,9 +37,9 @@
 services:
   scan:
     # (1) MANDATORY: image to run. Pulled from Docker Hub. To use a
-    # locally-built image instead, replace with `image: ubermetroid/scan:latest`
+    # locally-built image instead, replace with `image: etecoons/scan:latest`
     # after `podman build -f Containerfile.ubi
-    image: ubermetroid/scan:latest
+    image: etecoons/scan:latest
     container_name: scan
     restart: unless-stopped
 
