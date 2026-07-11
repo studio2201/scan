@@ -17,7 +17,7 @@ Scan is a clean, secure, and optimized planetary hazard sector scanner (Mineswee
 
 ---
 
-## 🟢 Key Features
+## Key Features
 * **Standardized UI Alignment**: Completely integrated with `shared-assets` for a uniform theme engine, navigation header, footer, and authentication layout.
 * **Orbital Sector Environments**: Selectable atmospheric navigation sectors (Alpha, Beta, Gamma, Delta, Epsilon, Zeta) with custom sci-fi HUD color schemes.
 * **Classic Scanning Rules**: Geothermal hazard (mine) sweep validation, adjacent count warnings, beacon placement (flags), and custom difficulty presets.
