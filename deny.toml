@@ -1,4 +1,4 @@
-# cargo-deny configuration for the Dachoras arcade apps.
+# cargo-deny configuration for the studio2201 arcade apps.
 # Enforces supply-chain and license safety on all dependencies.
 
 [graph]

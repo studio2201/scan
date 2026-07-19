@@ -9,10 +9,10 @@ resolver = "2"
 [workspace.package]
 version = "0.2.23"
 edition = "2024"
-authors = ["UberMetroid"]
+authors = ["studio2201"]
 license = "Apache-2.0"
-repository = "https://github.com/dachoras/scan"
-homepage = "https://github.com/dachoras/scan"
+repository = "https://github.com/studio2201/scan"
+homepage = "https://github.com/studio2201/scan"
 
 
 [workspace.lints.rust]
