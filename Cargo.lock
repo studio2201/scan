@@ -152,7 +152,7 @@ dependencies = [
 
 [[package]]
 name = "backend"
-version = "1.0.6"
+version = "1.0.27"
 dependencies = [
  "axum",
  "axum-extra",
@@ -168,7 +168,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "shared-backend",
- "shared-core",
+ "shared-core 3.0.39",
  "tempfile",
  "thiserror 2.0.18",
  "time",
@@ -452,7 +452,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39cab71617ae0d63f51a36d69f866391735b51691dbda63cf6f96d042b63efeb"
 dependencies = [
  "libc",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -496,7 +496,7 @@ dependencies = [
 
 [[package]]
 name = "frontend"
-version = "1.0.6"
+version = "1.0.27"
 dependencies = [
  "futures-channel",
  "futures-util",
@@ -506,7 +506,7 @@ dependencies = [
  "percent-encoding",
  "serde",
  "serde_json",
- "shared-core",
+ "shared-core 3.0.39",
  "shared-frontend",
  "wasm-bindgen",
  "wasm-bindgen-futures",
@@ -1600,7 +1600,7 @@ dependencies = [
  "once_cell",
  "socket2",
  "tracing",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1801,7 +1801,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1988,7 +1988,7 @@ dependencies = [
  "ipnet",
  "rusqlite",
  "serde",
- "shared-core",
+ "shared-core 3.0.33",
  "thiserror 2.0.18",
  "tokio",
  "tower-http 0.6.11",
@@ -2006,13 +2006,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "shared-core"
+version = "3.0.39"
+source = "git+https://github.com/studio2201/shared-assets.git?tag=v3.0.39#d9d716ba42b270f2dc3519357f915956d8ff79be"
+dependencies = [
+ "constant_time_eq 0.3.1",
+ "serde",
+]
+
+[[package]]
 name = "shared-frontend"
 version = "3.0.33"
 source = "git+https://github.com/studio2201/shared-assets.git?tag=v3.0.33#5c1f076b40ab66804648a645cc37978056d104f5"
 dependencies = [
  "js-sys",
  "serde",
- "shared-core",
+ "shared-core 3.0.33",
  "wasm-bindgen",
  "web-sys",
  "yew",
@@ -2130,7 +2139,7 @@ dependencies = [
  "getrandom 0.4.3",
  "once_cell",
  "rustix",
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -2725,7 +2734,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.61.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
